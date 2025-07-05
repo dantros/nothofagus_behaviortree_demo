@@ -19,6 +19,23 @@ option(ENABLE_DEBUG "Enable debug build with full symbols" OFF)
 option(FORCE_STATIC_LINKING "Force static linking of all dependencies" OFF)
 add_subdirectory("third_party/BehaviorTree.CPP")
 
+add_executable(nothofagus_bt_demo
+    "source/nothofagus_bt_demo.cpp"
+    "source/basic_game_engine.cpp"
+    "source/player.cpp"
+    "source/basic_game_engine.h"
+    "source/player.h"
+)
+set_property(TARGET nothofagus_bt_demo PROPERTY CXX_STANDARD 20)
+target_include_directories(nothofagus_bt_demo PRIVATE
+    ${NOTHOFAGUS_INCLUDE}
+    "third_party/BehaviorTree.CPP/include"
+)
+target_link_libraries(nothofagus_bt_demo PRIVATE
+    nothofagus
+    behaviortree_cpp
+)
+
 add_executable(vanilla_bt_demo
     "bt_example/dummy_nodes.h"
     "bt_example/dummy_nodes.cpp"
@@ -28,7 +45,7 @@ set_property(TARGET vanilla_bt_demo PROPERTY CXX_STANDARD 20)
 target_include_directories(vanilla_bt_demo PRIVATE "third_party/BehaviorTree.CPP/include")
 target_link_libraries(vanilla_bt_demo PRIVATE behaviortree_cpp)
 
-install(TARGETS vanilla_bt_demo
+install(TARGETS nothofagus_bt_demo vanilla_bt_demo
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         COMPONENT Demo_Runtime
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
