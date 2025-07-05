@@ -1,3 +1,6 @@
 [submodule "third_party/nothofagus"]
 	path = third_party/nothofagus
 	url = git@github.com:dantros/nothofagus.git
+[submodule "third_party/BehaviorTree.CPP"]
+	path = third_party/BehaviorTree.CPP
+	url = https://github.com/BehaviorTree/BehaviorTree.CPP.git
