@@ -29,6 +29,15 @@
             }
         },
         {
+            "name": "ninja-debug",
+            "inherits": "base",
+            "hidden": false,
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
             "name": "vs-debug",
             "inherits": "base",
             "hidden": false,
