@@ -2,6 +2,8 @@
 
 This is a small demo project using the simple [Nothofagus](https://github.com/dantros/nothofagus) renderer and [BehaviorTree.CPP](https://www.behaviortree.dev/).
 
+![screenshot](non_code/screenshot.png "screenshot")
+
 You, "the player", the white O character, can move using the arrow keys or the "gaming d-pad" WASD. The BehaviorTree controlled bot is the red X. Once it is close enough, it will start to dance for 2 seconds. If it is not close enough, it will move towards you.
 
 The Behavior Tree implemented is:
