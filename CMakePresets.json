@@ -38,6 +38,15 @@
             }
         },
         {
+            "name": "vs-release",
+            "inherits": "base",
+            "hidden": false,
+            "generator": "Visual Studio 17 2022",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
             "name": "vs-debug",
             "inherits": "base",
             "hidden": false,
@@ -45,6 +54,24 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "ninja-release",
+            "configurePreset": "ninja-release"
+        },
+        {
+            "name": "ninja-debug",
+            "configurePreset": "ninja-debug"
+        },
+        {
+            "name": "vs-release",
+            "configurePreset": "vs-release"
+        },
+        {
+            "name": "vs-debug",
+            "configurePreset": "vs-debug"
         }
     ]
 }
