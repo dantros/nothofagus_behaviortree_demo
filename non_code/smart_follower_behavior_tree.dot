@@ -1,0 +1,27 @@
+digraph BehaviorTree
+{
+	graph [bgcolor="transparent"];
+    node [shape=box, style=filled, fillcolor="white"];
+    edge [dir=forward];
+
+    Fallback1 [label="?", shape=box, fillcolor="#ffcccc"];
+
+	// More symbols at https://graphviz.org/doc/char.html
+    Sequence1 [label="&rarr;", shape=box, fillcolor="#ffcccc"];
+	Fallback1 -> Sequence1;
+
+    Action1_LookForPlayer [label="LookForPlayer", shape=ellipse, fillcolor="#ffffcc"];
+    Sequence1 -> Action1_LookForPlayer;
+
+    Action2_CloseEnough [label="CloseEnough", shape=ellipse, fillcolor="#ffffcc"];
+    Sequence1 -> Action2_CloseEnough;
+
+    Action3_Dance [label="Dance", shape=box];
+    Sequence1 -> Action3_Dance;
+
+    Action4_MoveTo [label="MoveTo", shape=box];
+    Fallback1 -> Action4_MoveTo;
+
+    { rank = same; }
+}
+/* To render, execute: dot -Tsvg file.dot -o file.svg */
