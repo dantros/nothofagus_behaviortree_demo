@@ -38,22 +38,10 @@
             }
         },
         {
-            "name": "vs-release",
+            "name": "msbuild",
             "inherits": "base",
             "hidden": false,
-            "generator": "Visual Studio 17 2022",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "vs-debug",
-            "inherits": "base",
-            "hidden": false,
-            "generator": "Visual Studio 17 2022",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
+            "generator": "Visual Studio 17 2022"
         }
     ],
     "buildPresets": [
@@ -67,11 +55,13 @@
         },
         {
             "name": "vs-release",
-            "configurePreset": "vs-release"
+            "configurePreset": "msbuild",
+            "configuration": "Release"
         },
         {
             "name": "vs-debug",
-            "configurePreset": "vs-debug"
+            "configurePreset": "msbuild",
+            "configuration": "Debug"
         }
     ]
 }
