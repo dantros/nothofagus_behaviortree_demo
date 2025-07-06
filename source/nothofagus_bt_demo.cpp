@@ -1,6 +1,7 @@
 
 #include "basic_game_engine.h"
 #include "player.h"
+#include "smart_follower.h"
 
 int main()
 {
@@ -22,13 +23,16 @@ int main()
     };
 
     Nothofagus::BellotaId playerBellotaId = makeCharBellota('O', {1,1,1}, {75.0f, 75.0f});
+    Nothofagus::BellotaId botBellotaId = makeCharBellota('X', {1,0,0}, {10.0f, 10.0f});
 
     // Allocating Memory for our Game Objects
     Gamepad gamepad;
     Player player;
+    SmartFollower smartFollower;
 
     // Initializing our Game Objects
     player.init(&canvas, playerBellotaId, 0.12, &gamepad);
+    smartFollower.init(&canvas, botBellotaId, 0.04, &player, 2000.f, .5f);
 
     // Setting up player controller via the gamepad struct
     Nothofagus::Controller controller;
@@ -46,6 +50,7 @@ int main()
             dt = 33.f;
         
         player.update(dt);
+        smartFollower.update(dt);
 
         ImGui::Begin("BehaviorTree Demo");
         ImGui::Text("Keys: WASD, arrows, ESC");

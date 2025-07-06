@@ -23,8 +23,12 @@ add_executable(nothofagus_bt_demo
     "source/nothofagus_bt_demo.cpp"
     "source/basic_game_engine.cpp"
     "source/player.cpp"
+    "source/smart_follower.cpp"
     "source/basic_game_engine.h"
     "source/player.h"
+    "source/smart_follower.h"
+    "source/timer.h"
+    "source/velocity_component.h"
 )
 set_property(TARGET nothofagus_bt_demo PROPERTY CXX_STANDARD 20)
 target_include_directories(nothofagus_bt_demo PRIVATE
