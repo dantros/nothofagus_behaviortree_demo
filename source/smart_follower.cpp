@@ -71,7 +71,7 @@ public:
     {
         updateDebugMessage("LookForPlayer::tick");
 
-        // if by any change the player becomes nullptr, this task will fail
+        // if by any chance the player becomes nullptr, this task will fail
         // you may want to consider a fallback task to gather the player location or to perform a specific task when there is no player.
         if (mPlayerPtr)
         {
