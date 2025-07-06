@@ -2,6 +2,8 @@
 #include "smart_follower.h"
 #include <behaviortree_cpp/behavior_tree.h>
 #include <behaviortree_cpp/bt_factory.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/string_cast.hpp> // to enable glm::to_string()
 #include <format>
 #include "timer.h"
 
@@ -25,14 +27,34 @@ namespace BT
     }
 } // namespace BT
 
+// Helper class to quickly visualize the internal task under execution
+// You should not use this in a release build, although I'm leaving it here just for learning purposes.
+// Consider adding a macro and a flag to remove it from release builds.
+class DebugMessageMixin
+{
+public:
+    DebugMessageMixin(SmartFollower* followerPtr) : mSmartFollowerPtr(followerPtr)
+    {}
+
+    void updateDebugMessage(const std::string& newMessage)
+    {
+        RUNTIME_CHECK(mSmartFollowerPtr);
+        mSmartFollowerPtr->mBehaviorTree.mDebugMessage = newMessage;
+    }
+
+private:
+    SmartFollower* mSmartFollowerPtr;
+};
+
 namespace ActionNodes
 {
 
-class LookForPlayer : public BT::SyncActionNode
+class LookForPlayer : public BT::SyncActionNode, public DebugMessageMixin
 {
 public:
     LookForPlayer(const std::string& name, const BT::NodeConfig& config, SmartFollower* followerPtr, Player* playerPtr) :
         BT::SyncActionNode(name, config),
+        DebugMessageMixin(followerPtr),
         mSmartFollowerPtr(followerPtr),
         mPlayerPtr(playerPtr)
     {
@@ -47,6 +69,8 @@ public:
 
     virtual BT::NodeStatus tick() override
     {
+        updateDebugMessage("LookForPlayer::tick");
+
         // if by any change the player becomes nullptr, this task will fail
         // you may want to consider a fallback task to gather the player location or to perform a specific task when there is no player.
         if (mPlayerPtr)
@@ -66,11 +90,12 @@ private:
     Player* mPlayerPtr;
 };
 
-class CloseEnough : public BT::SyncActionNode
+class CloseEnough : public BT::SyncActionNode, public DebugMessageMixin
 {
 public:
     CloseEnough(const std::string& name, const BT::NodeConfig& config, SmartFollower* followerPtr, float threshold) :
         BT::SyncActionNode(name, config),
+        DebugMessageMixin(followerPtr),
         mSmartFollowerPtr(followerPtr),
         mThreshold(threshold)
     {
@@ -85,6 +110,8 @@ public:
 
     virtual BT::NodeStatus tick() override
     {
+        updateDebugMessage("CloseEnough::tick");
+
         BT::Expected<glm::vec2> playerLocationInput = getInput<glm::vec2>("player_location");
         if (!playerLocationInput)
             throw BT::RuntimeError("missing required input [player_location]: ", playerLocationInput.error() );
@@ -106,11 +133,12 @@ private:
     float mThreshold;
 };
 
-class MoveTo : public BT::StatefulActionNode
+class MoveTo : public BT::StatefulActionNode, public DebugMessageMixin
 {
 public:
     MoveTo(const std::string& name, const BT::NodeConfig& config, SmartFollower* followerPtr, float threshold) :
         BT::StatefulActionNode(name, config),
+        DebugMessageMixin(followerPtr),
         mSmartFollowerPtr(followerPtr),
         mThreshold(threshold)
     {
@@ -125,6 +153,8 @@ public:
 
     virtual BT::NodeStatus onStart() override
     {
+        updateDebugMessage("MoveTo::onStart");
+
         // getting destination
         BT::Expected<glm::vec2> destinationInput = getInput<glm::vec2>("destination");
         if (!destinationInput)
@@ -146,6 +176,8 @@ public:
         RUNTIME_CHECK(mSmartFollowerPtr);
         Nothofagus::Bellota& bellota = mSmartFollowerPtr->getBellota();
         const glm::vec2& currentLocation = bellota.transform().location();
+        
+        updateDebugMessage("MoveTo::onRunning " + glm::to_string(currentLocation));
 
         if (glm::distance(currentLocation, mDestination) < mThreshold)
         {
@@ -159,6 +191,7 @@ public:
 
     virtual void onHalted() override
     {
+        updateDebugMessage("MoveTo::onHalted");
     }
 
 private:
@@ -167,11 +200,12 @@ private:
     float mThreshold;
 };
 
-class Dance : public BT::StatefulActionNode
+class Dance : public BT::StatefulActionNode, public DebugMessageMixin
 {
 public:
     Dance(const std::string& name, const BT::NodeConfig& config, SmartFollower* followerPtr, float danceDuration, float danceSpeed) :
         BT::StatefulActionNode(name, config),
+        DebugMessageMixin(followerPtr),
         mSmartFollowerPtr(followerPtr),
         mTimer(danceDuration),
         mDancingSpeed(danceSpeed),
@@ -186,6 +220,7 @@ public:
 
     virtual BT::NodeStatus onStart() override
     {
+        updateDebugMessage("Dance::onStart");
         mTimer.reset();
         return BT::NodeStatus::RUNNING;
     }
@@ -208,6 +243,8 @@ public:
         else
             currentAngle -= mDancingSpeed * deltaTime;
 
+        updateDebugMessage("Dance::onRunning " + std::to_string(currentAngle));
+
         if (mTimer.isFinished())
             return BT::NodeStatus::SUCCESS;
         else
@@ -216,6 +253,7 @@ public:
 
     virtual void onHalted() override
     {
+        updateDebugMessage("Dance::onHalted");
     }
 
 private:
@@ -293,4 +331,9 @@ void SmartFollower::update(float deltaTime)
 
 void SmartFollower::onDestroy()
 {
+}
+
+const std::string& SmartFollower::getDebugMessage() const
+{
+    return mBehaviorTree.mDebugMessage;
 }

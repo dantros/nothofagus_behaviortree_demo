@@ -54,6 +54,7 @@ int main()
 
         ImGui::Begin("BehaviorTree Demo");
         ImGui::Text("Keys: WASD, arrows, ESC");
+        ImGui::Text("Task: %s", smartFollower.getDebugMessage().c_str());
         ImGui::End();
     };
     canvas.run(update, controller);

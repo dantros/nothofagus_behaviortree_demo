@@ -10,6 +10,7 @@ struct BehaviorTree
 {
     struct Impl;
     Impl* pImpl;
+    std::string mDebugMessage;
 };
 
 class SmartFollower : public GameObject
@@ -34,5 +35,6 @@ public:
     BehaviorTree mBehaviorTree;
     VelocityComponent mVelocityComponent;
     float getDeltaTime() const;
+    const std::string& getDebugMessage() const;
 };
 
