@@ -1,14 +1,14 @@
 digraph BehaviorTree
 {
-	graph [bgcolor="transparent"];
+    graph [bgcolor="transparent"];
     node [shape=box, style=filled, fillcolor="white"];
     edge [dir=forward];
 
     Fallback1 [label="?", shape=box, fillcolor="#ffcccc"];
 
-	// More symbols at https://graphviz.org/doc/char.html
+    // More symbols at https://graphviz.org/doc/char.html
     Sequence1 [label="&rarr;", shape=box, fillcolor="#ffcccc"];
-	Fallback1 -> Sequence1;
+    Fallback1 -> Sequence1;
 
     Action1_LookForPlayer [label="LookForPlayer", shape=ellipse, fillcolor="#ffffcc"];
     Sequence1 -> Action1_LookForPlayer;
